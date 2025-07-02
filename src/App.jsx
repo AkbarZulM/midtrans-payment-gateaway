@@ -1,7 +1,9 @@
+import Main from "./components/Layouts/main";
+import "./index.css";
 function App() {
   return (
     <>
-      <span>Hello World</span>
+      <Main />
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import element from "../../assets/image/graphic-elements.png";
+import logo from "../../assets/image/logo.png";
 import "./MainStyle.css";
 
 const Main = () => {
@@ -18,7 +19,14 @@ const Main = () => {
 
     setCard([
       {
-        src: element,
+        src: "/Sepatu Jogging.avif",
+        alt: element,
+        title: "Card 1",
+        price: "$10",
+        description: "Description for Card 1",
+      },
+      {
+        src: "/Sepatu Jogging.avif",
         alt: element,
         title: "Card 1",
         price: "$10",
@@ -80,12 +88,34 @@ const Main = () => {
               <span className="text-2xl">1</span>
               <span className="text-2xl">2</span>
             </div>
-            <div className="card">
+            <div className="card grid grid-cols-2 gap-7">
               {cards.map((card, index) => (
-                <div className="" key={index}>
-                  <div className="card-item">{card.price}</div>
-                  <div className="card-item">{card.title}</div>
-                  <div className="card-item">{card.description}</div>
+                <div className="flex w-full h-full" key={index}>
+                  <div className="bg-white shadow-lg rounded-lg overflow-hidden mb-4 w-auto h-auto">
+                    <div className="card-body relative">
+                      <img
+                        src={card.src}
+                        alt={card.alt}
+                        className="w-[400px] h-[400px] object-cover"
+                      />
+                      <div className="flex items-center gap-2 p-4 absolute top-70 left-2 bg-opacity-80">
+                        <img
+                          src={logo}
+                          alt="Logo"
+                          className="rounded-full w-[80px] h-[80px]"
+                        />
+                        <div className="title-logo flex flex-col">
+                          <span className="title text-[20px] text-[#004D4C] [font-family:var(--font-hyper-viper)]">
+                            SHOPE ESD
+                          </span>
+                          <span className="sub-title">shell Brand Product</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="card-item">{card.price}</div>
+                    <div className="card-item">{card.title}</div>
+                    <div className="card-item">{card.description}</div>
+                  </div>
                 </div>
               ))}
             </div>

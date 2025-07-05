@@ -6,7 +6,7 @@ import "./MainStyle.css";
 const Main = () => {
   const [image, setImage] = useState([]);
   const [cards, setCard] = useState([]);
-  const [isHover, setIsHover] = useState(false);
+  const [isHovered, setIsHover] = useState(null);
 
   useEffect(() => {
     // set image hanya sekali
@@ -93,39 +93,54 @@ const Main = () => {
             </div>
             <div className="card grid grid-cols-2 gap-7">
               {cards.map((card, index) => {
+                const isHover = isHovered === index;
                 return (
-                  <div
-                    className="flex w-auto h-auto"
-                    key={index}
-                    onMouseEnter={() => setIsHover(true)}
-                    onMouseLeave={() => setIsHover(false)}
-                  >
-                    <div className="bg-white shadow-lg rounded-lg overflow-hidden mb-4 w-auto h-auto group">
-                      <div className="card-body relative">
-                        <div className="retangle"></div>
-                        <img
-                          src={card.src}
-                          alt={card.alt}
-                          className="w-[400px] h-[400px] object-cover"
-                        />
-                        <div className="flex items-center gap-2 p-4 absolute top-70 left-2 bg-opacity-80">
+                  <div className="flex w-auto h-auto" key={index}>
+                    <div
+                      className="bg-white shadow-lg rounded-lg overflow-hidden mb-4 w-auto h-auto group"
+                      onMouseEnter={() => setIsHover(index)}
+                      onMouseLeave={() => setIsHover(null)}
+                    >
+                      <div className="card-body relative z-30 h-[400px] w-[400px]  cursor-pointer">
+                        <div className="flex flex-col hover:opacity-80 transition-opacity duration-300 ease-in-out">
                           <img
-                            src={logo}
-                            alt="Logo"
-                            className="rounded-full w-[80px] h-[80px]"
+                            src={card.src}
+                            alt={card.alt}
+                            className={`w-[400px] h-[400px] object-cover ${
+                              isHover ? "slide-down-img" : "slide-up-img"
+                            }`} // 650px
                           />
-                          <div className="title-logo flex flex-col">
-                            <span className="title text-[20px] text-[#004D4C] [font-family:var(--font-hyper-viper)]">
-                              SHOPE ESD
-                            </span>
-                            <span className="sub-title">
-                              shell Brand Product
-                            </span>
+                          <div
+                            className={` gap-2 p-4 absolute top-72 left-2 bg-opacity-80 ${
+                              isHover ? "position-up" : "position-down"
+                            }  transition-all duration-300 ease-in-out`}
+                          >
+                            <div className="flex flex-col justify-between items-center">
+                              <div className="flex items-center gap-2">
+                                <img
+                                  src={logo}
+                                  alt="Logo"
+                                  className="rounded-full w-[60px] h-[60px]"
+                                />
+                                <div className="title-logo flex flex-col">
+                                  <span className="title text-[15px] text-[#004D4C] [font-family:var(--font-hyper-viper)]">
+                                    SHOPE ESD
+                                  </span>
+                                  <span className="sub-title text-[12px] text-[#004D4C]">
+                                    shell Brand Product
+                                  </span>
+                                </div>
+                                <div className="price text-[20px] text-[#004D4C] pl-25">
+                                  {card.price}
+                                </div>
+                              </div>
+                              <div></div>
+                            </div>
                           </div>
                         </div>
                       </div>
                       <div
-                        className={`card-footer flex flex-col p-4 gap-2 transition-all duration-300 ease-in-out ${
+                        className={`card-footer flex flex-col p-4 gap-2 transition-all duration-300 ease-in-out relative ${
                           isHover ? "slide-up" : ""
                         }`}
                       >

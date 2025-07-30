@@ -1,4 +1,4 @@
-import Main from "./components/Layouts/main";
+import Main from "./components/Layouts/Main";
 import "./index.css";
 function App() {
   return (

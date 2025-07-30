@@ -41,7 +41,6 @@
  @keyframes logoPositionUp {
      to {
          top: 10px;
-         left: 2px;
      }
 
  }
@@ -49,12 +48,10 @@
  @keyframes logoPositionDown {
      from {
          top: 10px;
-         left: 2px;
      }
 
      to {
          top: 280px;
-         left: 2px;
      }
 
  }

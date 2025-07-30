@@ -1,15 +1,28 @@
-import { useEffect, useState } from "react";
 import element from "../../assets/image/graphic-elements.png";
 import logo from "../../assets/image/logo.png";
+import ModalContent from "../Modal";
+import { getAllProducts } from "../../utils/products/services";
+import { useEffect, useState } from "react";
 import "./MainStyle.css";
-
 const Main = () => {
   const [image, setImage] = useState([]);
   const [cards, setCard] = useState([]);
+  const [cardId, setCardId] = useState(null);
   const [isHovered, setIsHover] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = (id) => {
+    console.log("Opening modal for product ID:", id);
+    setCardId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setCardId(null);
+  };
 
   useEffect(() => {
-    // set image hanya sekali
     setImage([
       { src: element, alt: "Image 1" },
       { src: element, alt: "Image 2" },
@@ -18,30 +31,22 @@ const Main = () => {
       { src: element, alt: "Image 5" },
     ]);
 
-    setCard([
-      {
-        src: "/Sepatu Jogging.avif",
-        alt: element,
-        title: "Nike Version Edtion",
-        price: "$10",
-        description:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ipsam delectus repellendus! Ut commodi officiis quo sapiente fuga recusandae ullam cumque optio, dolor amet cum maxime dolores aliquam cupiditate corporis.",
-      },
-      {
-        src: "/Sepatu Jogging.avif",
-        alt: element,
-        title: "Nike Version Edtion",
-        price: "$10",
-        description:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat ipsam delectus repellendus! Ut commodi officiis quo sapiente fuga recusandae ullam cumque optio, dolor amet cum maxime dolores aliquam cupiditate corporis.",
-      },
-    ]);
-  }, []);
+    const fetchProducts = async () => {
+      try {
+        const products = await getAllProducts();
+        setCard(products);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []); // ✅ hanya sekali
 
   return (
-    <div className="h-screen w-screen">
-      <div className="flex justify-between p-6">
-        <div className="side-left mt-30">
+    <div className="h-screen w-screen w-full">
+      <div className="flex justify-center p-6 ">
+        <div className="side-left absolute mt-30 left-0 h-full">
           <div className="grid grid-rows-5 relative">
             {image.map((img, index) => {
               let extraClass = "";
@@ -86,11 +91,7 @@ const Main = () => {
               Shope
             </span>
           </nav>
-          <main className="flex flex-col ">
-            <div className="previous gap-2 flex items-center mb-10">
-              <span className="text-2xl">1</span>
-              <span className="text-2xl">2</span>
-            </div>
+          <main className="flex flex-col">
             <div className="card grid grid-cols-2 gap-7">
               {cards.map((card, index) => {
                 const isHover = isHovered === index;
@@ -101,10 +102,10 @@ const Main = () => {
                       onMouseEnter={() => setIsHover(index)}
                       onMouseLeave={() => setIsHover(null)}
                     >
-                      <div className="card-body relative z-30 h-[400px] w-[400px]  cursor-pointer">
+                      <div className="card-body relative z-30 h-[400px] w-[450px]  cursor-pointer">
                         <div className="flex flex-col hover:opacity-80 transition-opacity duration-300 ease-in-out">
                           <img
-                            src={card.src}
+                            src="/Sepatu Jogging.avif"
                             alt={card.alt}
                             className={`w-[400px] h-[400px] object-cover ${
                               isHover ? "slide-down-img" : "slide-up-img"
@@ -115,7 +116,7 @@ const Main = () => {
                               isHover ? "position-up" : "position-down"
                             }  transition-all duration-300 ease-in-out`}
                           >
-                            <div className="flex flex-col justify-between items-center">
+                            <div className="flex flex-col justify-between items-center h-full w-full">
                               <div className="flex items-center gap-2">
                                 <img
                                   src={logo}
@@ -130,11 +131,21 @@ const Main = () => {
                                     shell Brand Product
                                   </span>
                                 </div>
-                                <div className="price text-[20px] text-[#004D4C] pl-25">
-                                  {card.price}
+                                <div className="price text-[20px] text-[#004D4C] pl-20">
+                                  Rp {card.price}
                                 </div>
                               </div>
-                              <div></div>
+                              <div>
+                                <button
+                                  onClick={() => {
+                                    handleOpenModal(card.product_id);
+                                  }}
+                                  className="bg-[#004D4C] text-white p-2 text-[20px] rounded-lg absolute top-130 left-2 hover:bg-[#003d3c] transition-colors duration-300 ease-in-out"
+                                  type="button"
+                                >
+                                  Buy Now
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -148,7 +159,12 @@ const Main = () => {
                           {card.title}
                         </div>
                         <div className="card-item text-justify">
-                          {card.description}
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Modi vel nobis ad provident unde nihil soluta
+                          corrupti distinctio doloremque animi? Debitis totam
+                          saepe delectus consectetur reiciendis perferendis
+                          soluta velit iure? Lorem ipsum dolor Lorem ipsum dolor
+                          sit amet, consectetur adipisicing elit.
                         </div>
                       </div>
                     </div>
@@ -158,46 +174,15 @@ const Main = () => {
             </div>
           </main>
         </div>
-
-        <div className="side-right mt-30">
-          <div className="grid grid-rows-5 relative">
-            {image.map((img, index) => {
-              let extraClass = "";
-              let style = { transfrom: `translateY(${index * 20}px)` };
-              if (index === 0) {
-                extraClass = "";
-                style.animation = "var(--slide-right)";
-              } else if (index === 1) {
-                extraClass = "left-[150px] ";
-                style.animation = "var(--slide-left)";
-              } else if (index === 2) {
-                extraClass = "";
-                style.animation = "var(--slide-right)";
-              } else if (index === 3) {
-                extraClass = "left-[150px]";
-                style.animation = "var(--slide-left)";
-              } else if (index === 4) {
-                extraClass = "";
-                style.animation = "var(--slide-right)";
-              }
-
-              return (
-                <div
-                  key={index}
-                  className="relative w-[190px] h-[190px] overflow-visible"
-                >
-                  <img
-                    src={img.src}
-                    alt={img.alt}
-                    className={`absolute top-0 left-0 w-full h-full object-cover transition-all duration-500 ${extraClass}`}
-                    style={style}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </div>
       </div>
+      {isModalOpen && (
+        <ModalContent
+          product_id={cardId}
+          onClose={() => {
+            handleCloseModal();
+          }}
+        />
+      )}
     </div>
   );
 };
